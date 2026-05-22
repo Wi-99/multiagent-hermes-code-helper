@@ -1,0 +1,36 @@
+{
+  "repoUrl": "https://github.com/pallets/flask",
+  "mode": "demo",
+  "stack": "flask",
+  "generatedAt": "2026-05-22T12:00:00Z",
+  "analysis": {
+    "fileCount": 28,
+    "totalLines": 4820,
+    "structureScore": 82,
+    "languages": { "Python": 4100, "Markdown": 520, "Other": 200 }
+  },
+  "diagnostic": {
+    "riskScore": 47,
+    "summary": { "critical": 1, "high": 2, "medium": 2, "low": 1 },
+    "issues": [
+      {
+        "id": "ISS-001",
+        "sev": "critical",
+        "title": "SQL 注入风险",
+        "file": "src/flask/app.py",
+        "line": 87,
+        "rule": "S3649",
+        "cwe": "CWE-89"
+      }
+    ]
+  },
+  "repair": {
+    "fixes": [
+      {
+        "issueId": "ISS-001",
+        "auto": true,
+        "conf": 91
+      }
+    ]
+  }
+}

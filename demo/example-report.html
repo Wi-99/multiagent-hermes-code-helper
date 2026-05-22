@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>示例报告快照 — Hermes Code Helper</title>
+  <link rel="stylesheet" href="../frontend/style.css" />
+</head>
+<body>
+  <header class="hdr">
+    <div class="hdr-logo">
+      <div class="logo-gem">⬡</div>
+      <div>
+        <div class="logo-name">示例报告快照</div>
+        <div class="logo-sub">可复制用于答辩 / 文档</div>
+      </div>
+    </div>
+    <span class="mode-pill demo">Demo 模式</span>
+  </header>
+  <main style="padding:16px">
+    <p class="evidence">仓库: https://github.com/demo/example_repo · 来源: sample_repos 本地扫描</p>
+    <div class="sum-grid">
+      <div class="sc hi"><div class="sc-lbl">扫描文件</div><div class="sc-val">2</div><div class="sc-unit">个</div></div>
+      <div class="sc danger"><div class="sc-lbl">发现问题</div><div class="sc-val">5</div><div class="sc-unit">个</div></div>
+      <div class="sc warn"><div class="sc-lbl">风险评分</div><div class="sc-val">65</div><div class="sc-unit">/100</div></div>
+      <div class="sc ok"><div class="sc-lbl">修复建议</div><div class="sc-val">5</div><div class="sc-unit">条</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt">问题示例</div></div>
+      <div class="issue-card open" data-sev="critical">
+        <span class="ibadge bc">critical</span>
+        <div>
+          <div class="it">硬编码密钥</div>
+          <div class="id2">在 config 中发现明文 API Key（本地 file1.py 规则扫描）</div>
+          <code class="iloc">file1.py:5</code>
+          <div class="idetail"><div class="isug">💡 迁移至环境变量</div></div>
+        </div>
+        <span>🔒 security</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt">修复 diff 示例</div></div>
+      <div class="diff-grid">
+        <div><div class="dlbl" style="background:rgba(239,68,68,.1);color:#ef4444;padding:4px 8px">修改前</div>
+        <pre class="dcode">API_KEY = "sk-demo-hardcoded-key"</pre></div>
+        <div><div class="dlbl" style="background:rgba(34,197,94,.1);color:#22c55e;padding:4px 8px">修改后</div>
+        <pre class="dcode">API_KEY = os.environ["API_KEY"]</pre></div>
+      </div>
+    </div>
+    <p class="evidence">完整交互请运行 <code>python start.py</code> 打开 http://127.0.0.1:8765/index.html</p>
+  </main>
+</body>
+</html>

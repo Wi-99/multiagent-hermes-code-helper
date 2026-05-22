@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "mode": "demo",
+  "live_error": "GitHub API rate limit — 使用 sample_repos 兜底",
+  "task_id": "T-DEMO-EXAMPLE_REPO",
+  "repo": {
+    "owner": "demo",
+    "name": "example_repo",
+    "url": "https://github.com/demo/example_repo"
+  },
+  "depth": "standard",
+  "analysis": {
+    "agent": "AnalysisAgent",
+    "tech_stack": "flask",
+    "file_count": 2,
+    "total_lines": 58,
+    "languages": { "Python": 32, "JavaScript": 26 },
+    "structure_score": 78,
+    "file_tree_preview": ["file1.py", "file2.js"]
+  },
+  "diagnostic": {
+    "agent": "DiagnosticAgent",
+    "risk_score": 65,
+    "summary": { "critical": 2, "high": 1, "medium": 1 },
+    "issues": [
+      {
+        "id": "ISS-001",
+        "sev": "critical",
+        "cat": "security",
+        "title": "硬编码密钥",
+        "file": "file1.py",
+        "line": 7,
+        "rule": "S6703",
+        "cwe": "CWE-798"
+      },
+      {
+        "id": "ISS-002",
+        "sev": "critical",
+        "cat": "security",
+        "title": "SQL 注入风险",
+        "file": "file1.py",
+        "line": 12,
+        "rule": "S3649",
+        "cwe": "CWE-89"
+      }
+    ]
+  },
+  "repair": {
+    "agent": "RepairAgent",
+    "fixes": [
+      {
+        "issue_id": "ISS-001",
+        "title": "硬编码密钥",
+        "conf": 92,
+        "auto": true
+      }
+    ]
+  },
+  "report": {
+    "agent": "ReportAgent",
+    "risk_label": "高危",
+    "generated_at": "2026-05-21 12:00 UTC"
+  }
+}

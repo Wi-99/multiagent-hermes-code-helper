@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hermes Code Helper — 多 Agent 代码分析</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <h1 class="sr-only">MultiAgent Hermes Code Helper</h1>
+
+  <header class="hdr">
+    <div class="hdr-logo">
+      <div class="logo-gem" aria-hidden="true">⬡</div>
+      <div>
+        <div class="logo-name">Hermes Code Helper</div>
+        <div class="logo-sub">Multi-Agent 代码理解与修复助手</div>
+      </div>
+    </div>
+    <div class="hdr-badges">
+      <span id="modeBadge" class="mode-pill demo" title="当前分析模式">Demo 模式</span>
+      <span class="badge">v2.1</span>
+      <span class="badge purple">5 Agents</span>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="主导航">
+    <button class="tab active" data-tab="analyze" type="button">🔍 分析</button>
+    <button class="tab" data-tab="results" type="button">📊 报告</button>
+    <button class="tab" data-tab="flow" type="button">🗺 流程图</button>
+    <button class="tab" data-tab="about" type="button">ℹ️ 关于</button>
+  </nav>
+
+  <main class="page active" id="pg-analyze">
+    <section class="input-panel">
+      <div class="input-label">输入 GitHub 仓库地址</div>
+      <div class="url-row" id="urlRow">
+        <span aria-hidden="true">🔗</span>
+        <input class="url-input" id="repoUrl" type="url" placeholder="https://github.com/owner/repository" value="https://github.com/pallets/flask" />
+      </div>
+      <p class="url-err" id="urlErr">请输入有效的 GitHub 仓库 URL（例如 https://github.com/owner/repo）</p>
+      <div class="opts-row">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:.68rem;color:var(--text2)">深度</span>
+          <div class="depth-pills">
+            <button class="pill" data-d="quick" type="button">⚡ 快速</button>
+            <button class="pill active" data-d="standard" type="button">🔍 标准</button>
+            <button class="pill" data-d="deep" type="button">🔬 深度</button>
+          </div>
+        </div>
+        <button class="btn-go" id="goBtn" type="button">开始分析 →</button>
+      </div>
+      <div class="quick-row">
+        <span class="q-lbl">示例仓库：</span>
+        <button class="q-btn" type="button" data-url="https://github.com/pallets/flask">Flask</button>
+        <button class="q-btn" type="button" data-url="https://github.com/django/django">Django</button>
+        <button class="q-btn" type="button" data-url="https://github.com/facebook/react">React</button>
+        <button class="q-btn" type="button" data-url="https://github.com/expressjs/express">Express</button>
+        <button class="q-btn" type="button" data-url="https://github.com/vuejs/vue">Vue</button>
+        <button class="q-btn" type="button" id="sampleBtn">📦 本地示例仓库</button>
+      </div>
+      <p class="evidence" id="modeNote" style="margin-top:10px">提示：通过 <code>python start.py</code> 启动后可启用 Live 模式（GitHub API + 后端 Agent）。直接打开 HTML 将使用浏览器 Demo 回退。</p>
+    </section>
+
+    <div class="agent-flow" aria-label="Agent 执行流">
+      <div class="fn" id="fn-usr"><div class="fn-icon">👤</div><div class="fn-name">用户输入</div></div>
+      <div class="fn-arrow">→</div>
+      <div class="fn amber" id="fn-orch"><div class="fn-icon">🎯</div><div class="fn-name">Orchestrator</div></div>
+      <div class="fn-arrow">→</div>
+      <div class="branch-wrap">
+        <div class="branch-arr">↙ ↘</div>
+        <div class="branch-nodes">
+          <div class="fn blue" id="fn-anal"><div class="fn-icon">🔭</div><div class="fn-name">Analysis</div></div>
+          <div class="fn red" id="fn-diag"><div class="fn-icon">🩺</div><div class="fn-name">Diagnostic</div></div>
+        </div>
+        <div class="branch-arr">↘ ↙</div>
+      </div>
+      <div class="fn-arrow">→</div>
+      <div class="fn orange" id="fn-rep"><div class="fn-icon">🔧</div><div class="fn-name">Repair</div></div>
+      <div class="fn-arrow">→</div>
+      <div class="fn teal2" id="fn-rpt"><div class="fn-icon">📊</div><div class="fn-name">Report</div></div>
+    </div>
+
+    <section id="prog-section" style="display:none" aria-live="polite">
+      <p class="prog-msg" id="prog-msg">初始化中…</p>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="log-box" id="log-box"></div>
+    </section>
+  </main>
+
+  <section class="page" id="pg-results">
+    <div class="empty-state" id="results-placeholder">
+      <div class="icon">📊</div>
+      <p>请先在「分析」页输入仓库地址并开始分析</p>
+      <button class="ebtn" type="button" data-goto="analyze" style="margin-top:12px">前往分析 →</button>
+    </div>
+    <div id="results-content" style="display:none">
+      <p class="evidence" id="resultModeNote"></p>
+      <div class="sum-grid" id="sum-grid"></div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="ph"><div class="pt">🎯 风险评分</div></div>
+          <div class="gauge-wrap">
+            <canvas id="gaugeC" width="220" height="120"></canvas>
+            <div class="gauge-score" id="g-score">—</div>
+            <div class="gauge-lbl" id="g-lbl">—</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">📊 问题严重度</div></div>
+          <div class="chart-wrap"><canvas id="sevC"></canvas></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="ph"><div class="pt">🌐 语言分布</div></div>
+          <div class="chart-wrap"><canvas id="langC"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><div class="pt">🔥 复杂度热点</div></div>
+          <div class="chart-wrap"><canvas id="cpxC"></canvas></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">🐛 问题详情（Diagnostic Agent）</div>
+          <div id="issue-filters"></div>
+        </div>
+        <div id="issues-list"></div>
+        <div class="empty-state" id="issues-empty" style="display:none;padding:20px">未发现问题（示例扫描）</div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">🔧 修复建议（Repair Agent）</div>
+          <button class="ebtn" id="copyPrBtn" type="button" style="font-size:.68rem">📋 复制 PR 模板</button>
+        </div>
+        <div id="repairs-list"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">📋 Analysis 证据链</div></div>
+        <pre id="evidence-pre" class="evidence" style="font-family:var(--mono);white-space:pre-wrap"></pre>
+      </div>
+      <div class="exp-row">
+        <button class="ebtn" id="expMdBtn" type="button">⬇ 导出 Markdown</button>
+        <button class="ebtn" id="expJsonBtn" type="button">⬇ 导出 JSON</button>
+        <button class="btn-reset" id="resetBtn" type="button">🔄 分析新仓库</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="pg-flow">
+    <div class="flow-diagram">
+      <div style="font-weight:600;margin-bottom:8px">多 Agent 工作流（Hermes 风格调度）</div>
+      <div class="frow"><div class="fbox usr">用户 URL</div><div class="farr">→</div><div class="fbox orch">Orchestrator</div></div>
+      <div class="frow"><div class="fbox anal">Analysis</div><div class="farr">‖</div><div class="fbox diag">Diagnostic</div></div>
+      <div class="frow"><div class="fbox rep">Repair</div><div class="farr">→</div><div class="fbox rpt">Report</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt">Mermaid 架构图</div></div>
+      <pre class="evidence">参见仓库 visual/diagrams.md — 可在 GitHub / Markdown 预览中渲染</pre>
+    </div>
+  </section>
+
+  <section class="page" id="pg-about">
+    <div class="about-grid">
+      <article class="acard"><div class="acard-title">产品定位</div><div class="acard-desc">面向非编程用户，粘贴 GitHub 链接即可获得结构化分析报告与示例修复 diff（可扩展框架演示）。</div></article>
+      <article class="acard"><div class="acard-title">双模式</div><div class="acard-desc"><strong>Live</strong>：后端 + GitHub API 读取公开仓库；<strong>Demo</strong>：sample_repos 或技术栈规则回退。</div></article>
+      <article class="acard"><div class="acard-title">已知限制</div><div class="acard-desc">不执行真实自动修复；Bandit/ESLint 等为可扩展占位；私有仓库需 Token（未内置）。</div></article>
+      <article class="acard"><div class="acard-title">交付物</div><div class="acard-desc">sample_output.md/json、demo/example-report.html、screenshots/README.md</div></article>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="pt">一键启动</div></div>
+      <pre class="evidence">cd multiagent-hermes-code-helper
+python start.py
+# 浏览器打开 http://127.0.0.1:8765/index.html</pre>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="/visual/charts.js" onerror="this.onerror=null;this.src='../visual/charts.js'"></script>
+  <script src="script.js"></script>
+</body>
+</html>

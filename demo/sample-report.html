@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>示例报告 — Hermes Code Helper</title>
+  <link rel="stylesheet" href="../frontend/style.css" />
+  <style>
+    body { max-width: 900px; margin: 0 auto; padding: 20px; }
+    h1 { font-size: 1.1rem; margin-bottom: 12px; }
+    .banner { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 10px; border-radius: 8px; margin-bottom: 16px; font-size: 0.8rem; color: var(--amber); }
+  </style>
+</head>
+<body>
+  <div class="banner">📄 静态示例报告 — 复制此页用于答辩/截图（非实时分析）</div>
+  <h1>🤖 Hermes Code Helper — 分析报告</h1>
+  <p style="color:var(--text2);font-size:.8rem;margin-bottom:16px">仓库: <code>sample_repos/example_repo</code> · 模式: <strong style="color:var(--amber)">DEMO</strong></p>
+
+  <div class="sum-grid">
+    <div class="sc hi"><div class="sc-lbl">扫描文件</div><div class="sc-val">2</div></div>
+    <div class="sc danger"><div class="sc-lbl">风险评分</div><div class="sc-val">65</div><div class="sc-unit">/100</div></div>
+    <div class="sc warn"><div class="sc-lbl">发现问题</div><div class="sc-val">4</div></div>
+    <div class="sc ok"><div class="sc-lbl">修复建议</div><div class="sc-val">4</div></div>
+  </div>
+
+  <div class="panel">
+    <h2 class="pt">🐛 问题摘要</h2>
+    <div class="issue-card" data-sev="critical" style="cursor:default">
+      <span class="ibadge bc">critical</span>
+      <div>
+        <div class="it">硬编码密钥</div>
+        <div class="id2">file1.py 第 7 行 — CWE-798</div>
+      </div>
+    </div>
+    <div class="issue-card" data-sev="critical" style="cursor:default">
+      <span class="ibadge bc">critical</span>
+      <div>
+        <div class="it">SQL 注入风险</div>
+        <div class="id2">file1.py 第 12 行 — CWE-89</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:20px;font-size:.75rem;color:var(--text3)">
+    <a href="../frontend/index.html" style="color:var(--teal)">← 返回交互 Demo</a>
+  </p>
+</body>
+</html>
