@@ -146,7 +146,7 @@ git push -u origin main
 
 ## 成果描述（≥150 词）
 
-我构建了一个参考 Hermes Agent 架构的多 Agent 代码理解与修复助手。该系统面向 GitHub 公开仓库，帮助用户在缺乏编程背景时仍能理解代码库健康状况：包括结构扫描、示例级静态问题识别、性能/安全类规则提示、修复建议与可视化报告导出。系统采用五 Agent 协作——Orchestrator 负责调度与 Live/Demo 模式切换，Analysis Agent 输出文件树与语言/热点数据，Diagnostic Agent 输出分级问题与规则 ID，Repair Agent 生成 before/after 示例 diff 与 PR 模板，Report Agent 汇总图表与 Markdown/JSON。项目通过 `run_server.py` 提供可运行后端，在无法访问 GitHub API 时自动回退至 `sample_repos` 或技术栈规则，并在 UI 明确标注模式，避免“伪造功能”误解。前端拆分为独立 HTML/CSS/JS，配套交付样例报告、示例 JSON、架构 Mermaid 与截图说明，可直接上传 GitHub 演示，具备清晰产品形态与可扩展技术路线。
+我构建了一个参考 Hermes Agent 架构的多 Agent 代码理解与修复助手。该系统面向 GitHub 公开仓库，帮助用户在缺乏编程背景时仍能理解代码库健康状况：包括结构扫描、示例级静态问题识别、性能/安全类规则提示、修复建议与可视化报告导出。系统采用五 Agent 协作——Orchestrator 负责调度与 Live/Demo 模式切换，Analysis Agent 输出文件树与语言/热点数据，Diagnostic Agent 输出分级问题与规则 ID，Repair Agent 生成 before/after 示例 diff 与 PR 模板，Report Agent 汇总图表与 Markdown/JSON。项目通过 `run_server.py` 提供可运行后端，在无法访问 GitHub API 时自动回退至 `sample_repos` 或技术栈规则，并在 UI 明确标注模式，避免“伪造功能”误解。前端拆分为独立 HTML/CSS/JS，配套交付样例报告、示例 JSON、架构 Mermaid 与截图说明，具备清晰产品形态与可扩展技术路线。
 
 ---
 
